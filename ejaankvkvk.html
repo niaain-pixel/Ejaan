@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permainan Ejaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://thumbs.dreamstime.com/b/cartoon-landscape-forest-trees-waves-under-blue-sky-dotted-fluffy-clouds-summer-time-background-ocean-view-316755465.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .header-stats {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            display: flex;
+            gap: 20px;
+            font-size: 1rem;
+        }
+
+        .header-stat {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .header-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .header-stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .leaderboard-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .leaderboard-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .player-section {
+            background: #F5F5F5;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .player-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 20px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .player-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .player-dropdown {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 20px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .player-dropdown:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .or-divider {
+            margin: 15px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .start-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .start-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Menu Page Styles */
+        .menu-page {
+            display: none;
+        }
+
+        .menu-page.active {
+            display: block;
+        }
+
+        .menu-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 700px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .menu-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .menu-title {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .menu-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: none;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-buttons.show {
+            display: flex;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .nav-btn.menu2 {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .nav-btn.menu2:hover {
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+ 
+.nav-btn.menu2:hover {
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+
+	.nav-btn.menu3 {
+           background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-left: 300px;
+	    outline: none;
+	    box-shadow: none;
+        }
+
+	.nav-btn.menu3:hover {
+         outline: none; /* confirm hilang bila fokus */
+    box-shadow: none; /* buang glow */
+        }
+
+        /* Game Content */
+        .game-content {
+            text-align: center;
+        }
+
+        .question-image {
+            width: 200px;
+            height: 200px;
+            background: #f8f9fa;
+            border: 3px solid #e9ecef;
+            border-radius: 15px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .answer-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .letter-box {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .letter-box:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .letter-box.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .letter-box.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .game-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .game-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .game-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .game-btn.secondary {
+            background: #6c757d;
+        }
+
+        .game-btn.secondary:hover {
+            background: #5a6268;
+        }
+
+        .game-btn.next {
+            background: #17a2b8;
+        }
+
+        .game-btn.next:hover {
+            background: #138496;
+        }
+
+        .score-display {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        /* Leaderboard Overlay */
+        .leaderboard-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .leaderboard-overlay.active {
+            display: flex;
+        }
+
+        .leaderboard-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .leaderboard-rank {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #4CAF50;
+        }
+
+        .leaderboard-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .leaderboard-score {
+            font-weight: 700;
+            color: #666;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        /* Table Styles */
+        .leaderboard-content table {
+            font-family: inherit;
+        }
+
+        .leaderboard-content td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .leaderboard-content td:nth-child(2) {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .leaderboard-content tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .leaderboard-content tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .leaderboard-content tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .rank-medal {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .rank-1 { color: #FFD700; }
+        .rank-2 { color: #C0C0C0; }
+        .rank-3 { color: #CD7F32; }
+        .rank-other { color: #4CAF50; }
+
+        /* Timer Display */
+        .timer-display {
+            position: absolute;
+            top: 20px;
+            right: 200px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Completion Overlay */
+        .completion-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+        }
+
+        .completion-overlay.active {
+            display: flex;
+        }
+
+        .completion-content {
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
+            color: white;
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: celebrationPop 0.6s ease-out;
+        }
+
+        @keyframes celebrationPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .completion-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .completion-message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .completion-stats {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .completion-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .completion-stat:last-child {
+            margin-bottom: 0;
+        }
+
+        .completion-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .completion-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .completion-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Audio Button Styles */
+        .audio-button {
+            background: linear-gradient(135deg, #FF9800, #FFB74D);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .audio-button:hover {
+            background: linear-gradient(135deg, #F57C00, #FF9800);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .audio-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+<!-- Main Page -->
+<div class="container" id="mainPage">
+    <div class="header">
+        <div class="header-stats">
+             <!-- Butang Home -->
+      <button onclick="goHome()" 
+              style="height:45px; width:45px; font-size:20px; 
+                     display:flex; align-items:center; justify-content:center;
+                     background:rgba(255,255,255,0.2); 
+                     border:2px solid rgba(255,255,255,0.3); 
+                     border-radius:12px; 
+                     cursor:pointer;">
+        🏠
+      </button>
+            
+                 <!-- Skor -->
+      <div style="height:45px; display:flex; flex-direction:column; justify-content:center; 
+                  background:rgba(255,255,255,0.2); 
+                  padding:8px 15px; border-radius:15px; text-align:center;">
+        <div style="font-size:0.8rem; opacity:0.9;">Skor</div>
+        <div style="font-size:1.2rem; font-weight:700;" id="score">0</div>
+      </div>
+
+    </div>
+
+        <!-- Timer -->
+        <div class="timer-display" id="timerDisplay">
+            ⏱️ <span id="timerValue">00:00</span>
+        </div>
+
+        <!-- Papan Markah -->
+        <button class="leaderboard-btn" onclick="showLeaderboard()">
+            🏆 Papan Markah
+        </button>
+
+        <h1 class="game-title">Permainan Ejaan</h1>
+        <p class="subtitle">Masukkan nama untuk mula bermain!</p>
+    </div>
+
+
+
+
+
+
+        <div class="main-content">
+            <!-- Player Input Section -->
+            <div class="player-section" id="playerSection">
+                <h3 style="margin-bottom: 20px; color: #333;">Masukkan Nama Pemain</h3>
+                <input type="text" class="player-input" placeholder="Nama anda..." id="playerName">
+
+<!-- Input nama sekolah -->
+        <input type="text" id="namasekolah" class="player-input" placeholder="Nama Sekolah" style="margin-bottom: 10px; padding: 8px; width: 100%;">
+
+                <div class="or-divider">atau</div>
+                <select class="player-dropdown" id="playerSelect">
+                    <option value="">Pilih nama...</option>
+                </select>
+                <br><br>
+                <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
+                    <button class="start-btn" onclick="startGame()">🚀 Mula Permainan</button>
+                    <button class="start-btn" onclick="resetPlayerSelection()" style="background: #dc3545;">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons (hidden initially) -->
+            <div class="nav-buttons" id="navButtons">
+                <button class="nav-btn" onclick="openMenu1()">
+                    📚 Menu M & N
+                </button>
+                <button class="nav-btn menu2" onclick="openMenu2()">
+                    🎮 Menu K & S
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu 1 Page (M & N) -->
+    <div class="menu-page" id="menu1">
+        <div class="menu-content">
+            <button class="back-btn" onclick="backToMain()">← Kembali</button>
+	    <button class="nav-btn menu3" onclick="goHome()">
+		    🏠</button>
+            <div class="menu-header">
+                <h2 class="menu-title">📖 Menu M & N</h2>
+                <p class="menu-subtitle">Permainan Ejaan - Huruf M dan N</p>
+            </div>
+            
+            <div class="game-content">
+                <div class="score-display" id="menu1Score">
+                    Skor: <span id="menu1ScoreValue">0</span> | Soalan: <span id="menu1Question">1</span>/10
+                </div>
+                
+                <div class="question-image" id="menu1Image">🥬</div>
+                <button class="audio-button" onclick="playQuestionAudio1()">🔊 Dengar Soalan</button>
+                <div class="question-text" id="menu1Text">Apakah nama sayuran hijau ini?</div>
+                
+                <div class="answer-boxes" id="menu1AnswerBoxes">
+                    <!-- Letter boxes will be generated here -->
+                </div>
+                
+                <div class="feedback" id="menu1Feedback" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu 2 Page (K & S) -->
+    <div class="menu-page" id="menu2">
+        <div class="menu-content">
+            <button class="back-btn" onclick="backToMain()">← Kembali</button>
+	    <button class="nav-btn menu3" onclick="goHome()">
+		    🏠</button>
+            <div class="menu-header">
+                <h2 class="menu-title">🎲 Menu K & S</h2>
+                <p class="menu-subtitle">Permainan Ejaan - Huruf K dan S</p>
+            </div>
+            
+            <div class="game-content">
+                <div class="score-display" id="menu2Score">
+                    Skor: <span id="menu2ScoreValue">0</span> | Soalan: <span id="menu2Question">1</span>/10
+                </div>
+                
+                <div class="question-image" id="menu2Image">🍍</div>
+                <button class="audio-button" onclick="playQuestionAudio2()">🔊 Dengar Soalan</button>
+                <div class="question-text" id="menu2Text">Apakah nama buah kuning ini?</div>
+                
+                <div class="answer-boxes" id="menu2AnswerBoxes">
+                    <!-- Letter boxes will be generated here -->
+                </div>
+                
+                <div class="feedback" id="menu2Feedback" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Overlay -->
+    <div class="completion-overlay" id="completionOverlay">
+        <div class="completion-content">
+            <div class="completion-title">🎉</div>
+            <div class="completion-message" id="completionMessage">Tahniah!</div>
+            <div class="completion-stats">
+                <div class="completion-stat">
+                    <span>Skor Akhir:</span>
+                    <span id="finalScore">0 mata</span>
+                </div>
+                <div class="completion-stat">
+                    <span>Masa Diambil:</span>
+                    <span id="finalTime">00:00</span>
+                </div>
+                <div class="completion-stat">
+                    <span>Soalan Betul:</spalen>
+                    <span id="correctAnswers">0/0</span>
+                </div>
+            </div>
+            <div class="completion-buttons">
+                <button class="completion-btn" onclick="closeCompletion()">Menu Permainan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Overlay -->
+    <div class="leaderboard-overlay" id="leaderboardOverlay">
+        <div class="leaderboard-content">
+            <button class="close-btn" onclick="closeLeaderboard()">&times;</button>
+            <div class="menu-header">
+                <h2 class="menu-title">🏆 Papan Markah</h2>
+                <p class="menu-subtitle">Rekod Pencapaian Pemain</p>
+            </div>
+            
+            <!-- Player Selection Dropdown -->
+            <div style="margin-bottom: 20px; text-align: center;">
+                <select id="playerSelectDropdown" onchange="showPlayerRecords()" style="padding: 10px 15px; border-radius: 8px; border: 2px solid #e9ecef; font-size: 1rem; min-width: 200px;">
+                    <option value="">📊 Papan Markah Utama</option>
+                </select>
+            </div>
+            
+            <!-- Main Leaderboard Table -->
+            <div id="mainLeaderboard">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <thead>
+                        <tr style="background: #4CAF50; color: white;">
+                            <th style="padding: 12px; text-align: center; border-radius: 8px 0 0 0;">Kedudukan</th>
+                            <th style="padding: 12px; text-align: left;">Nama</th>
+                            <th style="padding: 12px; text-align: center;">M&N</th>
+                            <th style="padding: 12px; text-align: center;">K&S</th>
+                            <th style="padding: 12px; text-align: center; border-radius: 0 8px 0 0;">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardTableBody">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Player Records Table -->
+            <div id="playerRecords" style="display: none;">
+                <h3 id="playerRecordsTitle" style="color: #4CAF50; margin-bottom: 15px; text-align: center;"></h3>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #4ECDC4; color: white;">
+                                <th style="padding: 10px; text-align: center;">Tarikh</th>
+                                <th style="padding: 10px; text-align: center;">Menu</th>
+                                <th style="padding: 10px; text-align: center;">Skor</th>
+                                <th style="padding: 10px; text-align: center;">Masa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="playerRecordsTableBody">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="game-buttons" style="margin-top: 30px;">
+                <button class="game-btn secondary" onclick="closeLeaderboard()">❌ Tutup</button>
+<button class="game-btn" onclick="exportOldRecords()">📤 Eksport Rekod Lama</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPlayer = '';
+        let currentScore = 0;
+        let currentLevel = 1;
+        let gameStartTime = 0;
+        let gameTimer = null;
+        let currentGameTime = 0;
+        
+        // Menu 1 game data (M & N)
+        let menu1Data = [
+            {emoji: '🥬', question: 'Apakah nama sayuran hijau ini?', answer: 'BAYAM'},
+            {emoji: '🦀', question: 'Apakah nama haiwan laut ini?', answer: 'KETAM'},
+            {emoji: '🍽️', question: 'Apakah aktiviti ini dipanggil?', answer: 'MAKAN'},
+            {emoji: '🏊', question: 'Tempat untuk berenang dipanggil?', answer: 'KOLAM'},
+            {emoji: '📋', question: 'Benda rata untuk menulis dipanggil?', answer: 'PAPAN'},
+            {emoji: '🌙', question: 'Benda bulat di langit malam dipanggil?', answer: 'BULAN'},
+            {emoji: '🧼', question: 'Benda untuk mandi dipanggil?', answer: 'SABUN'},
+            {emoji: '🪡', question: 'Alat untuk menjahit dipanggil?', answer: 'JARUM'},
+            {emoji: '☕', question: 'Bekas untuk minum dipanggil?', answer: 'CAWAN'},
+            {emoji: '🥒', question: 'Sayuran hijau panjang ini dipanggil?', answer: 'TIMUN'}
+        ];
+        
+        // Menu 2 game data (K & S)
+        let menu2Data = [
+            {emoji: '🍍', question: 'Apakah nama buah kuning ini?', answer: 'NANAS'},
+            {emoji: '🍚', question: 'Makanan ruji orang Asia dipanggil?', answer: 'BERAS'},
+            {emoji: '🥕', question: 'Sayuran oren panjang ini dipanggil?', answer: 'LOBAK'},
+            {emoji: '🐸', question: 'Haiwan hijau yang melompat dipanggil?', answer: 'KATAK'},
+            {emoji: '🪭', question: 'Alat untuk buat angin dipanggil?', answer: 'KIPAS'},
+            {emoji: '🥤', question: 'Bekas untuk minum air dipanggil?', answer: 'GELAS'},
+            {emoji: '🦎', question: 'Haiwan kecil di dinding dipanggil?', answer: 'CICAK'},
+            {emoji: '📦', question: 'Bekas untuk simpan barang dipanggil?', answer: 'KOTAK'},
+            {emoji: '🐒', question: 'Haiwan yang suka makan pisang dipanggil?', answer: 'BERUK'},
+            {emoji: '🧴', question: 'Serbuk untuk cantikkan muka dipanggil?', answer: 'BEDAK'}
+        ];
+        
+        let menu1CurrentQ = 0;
+        let menu1Score = 0;
+        let menu1Correct = 0;
+        let menu2CurrentQ = 0;
+        let menu2Score = 0;
+        let menu2Correct = 0;
+
+        // Sound functions using Web Audio API
+        function playCorrectSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+            oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function playIncorrectSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3
+            oscillator.frequency.setValueAtTime(196, audioContext.currentTime + 0.2); // G3
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.4);
+        }
+
+        function playCompletionSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Victory melody
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            let time = audioContext.currentTime;
+            
+            notes.forEach((freq, index) => {
+                oscillator.frequency.setValueAtTime(freq, time + (index * 0.2));
+            });
+            
+            gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 1);
+        }
+
+        // Timer functions
+        function startTimer() {
+            gameStartTime = Date.now();
+            gameTimer = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            currentGameTime = Math.floor((Date.now() - gameStartTime) / 1000);
+            const minutes = Math.floor(currentGameTime / 60);
+            const seconds = currentGameTime % 60;
+            document.getElementById('timerValue').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function stopTimer() {
+            if (gameTimer) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+            }
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function populatePlayerDropdown() {
+            const dropdown = document.getElementById('playerSelect');
+            const playerNames = getUniquePlayerNames();
+            
+            // Clear existing options except the first one
+            dropdown.innerHTML = '<option value="">Pilih nama...</option>';
+            
+            // Add previous player names
+            playerNames.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function startGame() {
+    const playerName = document.getElementById('playerName').value || document.getElementById('playerSelect').value;
+    const schoolName = document.getElementById('namasekolah').value; // ambil nama sekolah
+
+    if (!playerName || !schoolName) {
+        alert('Sila masukkan nama pemain dan nama sekolah terlebih dahulu!');
+        return;
+    }
+
+    // Simpan sebagai object
+    currentPlayer = {
+        name: playerName,
+        school: schoolName
+    };
+
+    document.getElementById('playerSection').style.display = 'none';
+    document.getElementById('navButtons').classList.add('show');
+    document.querySelector('.subtitle').textContent = 
+        `Selamat datang ${playerName} dari ${schoolName}! Pilih menu untuk bermain.`;
+}
+
+
+        function openMenu1() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('menu1').classList.add('active');
+            resetMenu1();
+            loadQuestion1();
+            startTimer();
+        }
+
+        function openMenu2() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('menu2').classList.add('active');
+            resetMenu2();
+            loadQuestion2();
+            startTimer();
+        }
+
+        function backToMain() {
+            stopTimer();
+            document.getElementById('timerValue').textContent = '00:00';
+            document.getElementById('mainPage').style.display = 'block';
+            document.getElementById('menu1').classList.remove('active');
+            document.getElementById('menu2').classList.remove('active');
+        }
+
+	function goHome() {
+  		location.reload(); // reset semua macam mula
+	}
+
+        function resetMenu1() {
+            menu1CurrentQ = 0;
+            menu1Score = 0;
+            menu1Correct = 0;
+            document.getElementById('menu1ScoreValue').textContent = menu1Score;
+            document.getElementById('menu1Feedback').style.display = 'none';
+        }
+
+        function resetMenu2() {
+            menu2CurrentQ = 0;
+            menu2Score = 0;
+            menu2Correct = 0;
+            document.getElementById('menu2ScoreValue').textContent = menu2Score;
+            document.getElementById('menu2Feedback').style.display = 'none';
+        }
+
+        function createLetterBoxes(containerId, wordLength) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            for (let i = 0; i < wordLength; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'letter-box';
+                input.maxLength = 1;
+                input.dataset.index = i;
+                
+                input.addEventListener('input', function(e) {
+                    const value = e.target.value.toUpperCase();
+                    e.target.value = value;
+                    
+                    if (value && i < wordLength - 1) {
+                        const nextBox = container.children[i + 1];
+                        if (nextBox) nextBox.focus();
+                    }
+                    
+                    checkAutoComplete(containerId);
+                });
+                
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !e.target.value && i > 0) {
+                        const prevBox = container.children[i - 1];
+                        if (prevBox) {
+                            prevBox.focus();
+                            prevBox.value = '';
+                        }
+                    }
+                });
+                
+                container.appendChild(input);
+            }
+            
+            // Focus first box
+            if (container.children[0]) {
+                container.children[0].focus();
+            }
+        }
+
+        function checkAutoComplete(containerId) {
+            const container = document.getElementById(containerId);
+            const boxes = container.children;
+            let userAnswer = '';
+            let allFilled = true;
+            
+            for (let box of boxes) {
+                if (box.value) {
+                    userAnswer += box.value;
+                } else {
+                    allFilled = false;
+                }
+            }
+            
+            if (allFilled) {
+                if (containerId === 'menu1AnswerBoxes') {
+                    checkAnswer1(userAnswer);
+                } else if (containerId === 'menu2AnswerBoxes') {
+                    checkAnswer2(userAnswer);
+                }
+            }
+        }
+
+        function loadQuestion1() {
+            if (menu1CurrentQ < menu1Data.length) {
+                const q = menu1Data[menu1CurrentQ];
+                document.getElementById('menu1Image').textContent = q.emoji;
+                document.getElementById('menu1Text').textContent = q.question;
+                document.getElementById('menu1Question').textContent = menu1CurrentQ + 1;
+                document.getElementById('menu1Feedback').style.display = 'none';
+                createLetterBoxes('menu1AnswerBoxes', q.answer.length);
+            }
+        }
+
+        function loadQuestion2() {
+            if (menu2CurrentQ < menu2Data.length) {
+                const q = menu2Data[menu2CurrentQ];
+                document.getElementById('menu2Image').textContent = q.emoji;
+                document.getElementById('menu2Text').textContent = q.question;
+                document.getElementById('menu2Question').textContent = menu2CurrentQ + 1;
+                document.getElementById('menu2Feedback').style.display = 'none';
+                createLetterBoxes('menu2AnswerBoxes', q.answer.length);
+            }
+        }
+
+        function checkAnswer1(userAnswer = null) {
+            if (!userAnswer) {
+                const container = document.getElementById('menu1AnswerBoxes');
+                const boxes = container.children;
+                userAnswer = '';
+                for (let box of boxes) {
+                    userAnswer += box.value;
+                }
+            }
+            
+            const correctAnswer = menu1Data[menu1CurrentQ].answer;
+            const feedback = document.getElementById('menu1Feedback');
+            const container = document.getElementById('menu1AnswerBoxes');
+            
+            if (userAnswer === correctAnswer) {
+                menu1Score += 5;
+                menu1Correct++;
+                document.getElementById('menu1ScoreValue').textContent = menu1Score;
+                feedback.textContent = '🎉 Betul!';
+                feedback.className = 'feedback correct';
+                updateMainScore(5);
+                playCorrectSound();
+                
+                // Mark boxes as correct
+                for (let box of container.children) {
+                    box.classList.add('correct');
+                    box.disabled = true;
+                }
+                
+                // Auto advance after 1.5 seconds
+                setTimeout(() => {
+                    nextQuestion1();
+                }, 1500);
+            } else {
+                feedback.textContent = '❌ Salah! Cuba lagi.';
+                feedback.className = 'feedback incorrect';
+                playIncorrectSound();
+                
+                // Highlight incorrect letters only
+                for (let i = 0; i < container.children.length; i++) {
+                    const box = container.children[i];
+                    const userLetter = box.value.toUpperCase();
+                    const correctLetter = correctAnswer[i];
+                    
+                    box.classList.remove('incorrect');
+                    
+                    if (userLetter !== correctLetter) {
+                        box.classList.add('incorrect');
+                        // Clear only incorrect letters after animation
+                        setTimeout(() => {
+                            box.value = '';
+                            box.classList.remove('incorrect');
+                        }, 1000);
+                    }
+                }
+                
+                // Hide feedback after delay
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 2000);
+            }
+            
+            feedback.style.display = 'block';
+        }
+
+        function checkAnswer2(userAnswer = null) {
+            if (!userAnswer) {
+                const container = document.getElementById('menu2AnswerBoxes');
+                const boxes = container.children;
+                userAnswer = '';
+                for (let box of boxes) {
+                    userAnswer += box.value;
+                }
+            }
+            
+            const correctAnswer = menu2Data[menu2CurrentQ].answer;
+            const feedback = document.getElementById('menu2Feedback');
+            const container = document.getElementById('menu2AnswerBoxes');
+            
+            if (userAnswer === correctAnswer) {
+                menu2Score += 5;
+                menu2Correct++;
+                document.getElementById('menu2ScoreValue').textContent = menu2Score;
+                feedback.textContent = '🎉 Betul!';
+                feedback.className = 'feedback correct';
+                updateMainScore(5);
+                playCorrectSound();
+                
+                // Mark boxes as correct
+                for (let box of container.children) {
+                    box.classList.add('correct');
+                    box.disabled = true;
+                }
+                
+                // Auto advance after 1.5 seconds
+                setTimeout(() => {
+                    nextQuestion2();
+                }, 1500);
+            } else {
+                feedback.textContent = '❌ Salah! Cuba lagi.';
+                feedback.className = 'feedback incorrect';
+                playIncorrectSound();
+                
+                // Highlight incorrect letters only
+                for (let i = 0; i < container.children.length; i++) {
+                    const box = container.children[i];
+                    const userLetter = box.value.toUpperCase();
+                    const correctLetter = correctAnswer[i];
+                    
+                    box.classList.remove('incorrect');
+                    
+                    if (userLetter !== correctLetter) {
+                        box.classList.add('incorrect');
+                        // Clear only incorrect letters after animation
+                        setTimeout(() => {
+                            box.value = '';
+                            box.classList.remove('incorrect');
+                        }, 1000);
+                    }
+                }
+                
+                // Hide feedback after delay
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 2000);
+            }
+            
+            feedback.style.display = 'block';
+        }
+
+        function showCompletionOverlay(menuName, score, correct, total) {
+            stopTimer();
+            playCompletionSound();
+            
+            // Save game record to localStorage
+            saveGameRecord(currentPlayer.name, currentPlayer.school, menuName, score, correct, total, currentGameTime);
+
+ // === HANTAR KE GOOGLE SHEETS ===
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzueysNzqKD2ZTuFNanETrqWRnsA1pmE_ktw_YDXMwYHoegYG1M8OzM1ACvhOiILlNyAg/exec"; // letak URL web app baru
+const payload = {
+    name: currentPlayer.name,
+    schoolName: currentPlayer.school,
+    game: menuName,
+    score: score,
+    duration: formatTime(currentGameTime)
+};
+fetch(WEB_APP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(payload)
+})
+.then(r => r.json())
+.then(out => console.log("Rekod Google Sheet:", out))
+.catch(err => console.error("Ralat Google Sheet:", err));
+// ===============================
+
+
+            
+            document.getElementById('completionMessage').textContent = 
+                `Tahniah ${currentPlayer.name}! (${currentPlayer.school})!Anda telah selesai ${menuName}!`;
+            document.getElementById('finalScore').textContent = `${score} mata`;
+            document.getElementById('finalTime').textContent = formatTime(currentGameTime);
+            document.getElementById('correctAnswers').textContent = `${correct}/${total}`;
+            
+            document.getElementById('completionOverlay').classList.add('active');
+        }
+
+        function closeCompletion() {
+            document.getElementById('completionOverlay').classList.remove('active');
+            backToMain();
+        }
+
+        function nextQuestion1() {
+            menu1CurrentQ++;
+            if (menu1CurrentQ < menu1Data.length) {
+                loadQuestion1();
+            } else {
+                showCompletionOverlay('Menu M & N', menu1Score, menu1Correct, menu1Data.length);
+            }
+        }
+
+        function nextQuestion2() {
+            menu2CurrentQ++;
+            if (menu2CurrentQ < menu2Data.length) {
+                loadQuestion2();
+            } else {
+                showCompletionOverlay('Menu K & S', menu2Score, menu2Correct, menu2Data.length);
+            }
+        }
+
+        function updateMainScore(points) {
+            currentScore += points;
+            document.getElementById('score').textContent = currentScore;
+            
+            if (currentScore >= 100 && currentLevel === 1) {
+                currentLevel = 2;
+                document.getElementById('level').textContent = currentLevel;
+            } else if (currentScore >= 200 && currentLevel === 2) {
+                currentLevel = 3;
+                document.getElementById('level').textContent = currentLevel;
+            }
+        }
+
+        function showLeaderboard() {
+            updateLeaderboardDropdown();
+            displayMainLeaderboard();
+            document.getElementById('leaderboardOverlay').classList.add('active');
+        }
+
+        function closeLeaderboard() {
+            document.getElementById('leaderboardOverlay').classList.remove('active');
+            // Reset to main leaderboard view
+            document.getElementById('playerSelectDropdown').value = '';
+            document.getElementById('mainLeaderboard').style.display = 'block';
+            document.getElementById('playerRecords').style.display = 'none';
+        }
+
+        function resetPlayerSelection() {
+            document.getElementById('playerName').value = '';
+            document.getElementById('playerSelect').value = '';
+        }
+
+        function updateLeaderboardDropdown() {
+            const dropdown = document.getElementById('playerSelectDropdown');
+            const playerNames = getUniquePlayerNames();
+            
+            // Clear existing options except the first one
+            dropdown.innerHTML = '<option value="">📊 Papan Markah Utama</option>';
+            
+            // Add player names
+            playerNames.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = `👤 ${name}`;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function displayMainLeaderboard() {
+            const playerStats = getPlayerStats();
+            const tableBody = document.getElementById('leaderboardTableBody');
+            
+            if (playerStats.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #666;">Belum ada rekod permainan</td></tr>';
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            playerStats.forEach((player, index) => {
+                const row = document.createElement('tr');
+                const rank = index + 1;
+                let rankDisplay = `#${rank}`;
+                let rankClass = 'rank-other';
+                
+                if (rank === 1) {
+                    rankDisplay = '🥇 #1';
+                    rankClass = 'rank-1';
+                } else if (rank === 2) {
+                    rankDisplay = '🥈 #2';
+                    rankClass = 'rank-2';
+                } else if (rank === 3) {
+                    rankDisplay = '🥉 #3';
+                    rankClass = 'rank-3';
+                }
+                
+                row.innerHTML = `
+                    <td><span class="rank-medal ${rankClass}">${rankDisplay}</span></td>
+                    <td>${player.playerName}</td>
+                    <td><strong>${player.menuMN || 0}</strong></td>
+                    <td><strong>${player.menuKS || 0}</strong></td>
+                    <td><strong>${player.totalScore}</strong></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        function showPlayerRecords() {
+            const selectedPlayer = document.getElementById('playerSelectDropdown').value;
+            
+            if (!selectedPlayer) {
+                // Show main leaderboard
+                document.getElementById('mainLeaderboard').style.display = 'block';
+                document.getElementById('playerRecords').style.display = 'none';
+                return;
+            }
+            
+            // Show player records
+            document.getElementById('mainLeaderboard').style.display = 'none';
+            document.getElementById('playerRecords').style.display = 'block';
+            
+            const playerRecords = getPlayerRecords(selectedPlayer);
+            const title = document.getElementById('playerRecordsTitle');
+            const tableBody = document.getElementById('playerRecordsTableBody');
+            
+            title.textContent = `📋 Rekod Permainan ${selectedPlayer}`;
+            
+            if (playerRecords.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #666;">Tiada rekod untuk pemain ini</td></tr>';
+                return;
+            }
+            
+            tableBody.innerHTML = '';
+            
+            playerRecords.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.menuName}</td>
+                    <td><strong>${record.score} mata</strong></td>
+                    <td>${formatTime(record.timeInSeconds)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Audio functions for answers
+        function playQuestionAudio1() {
+            if (menu1CurrentQ < menu1Data.length) {
+                const answer = menu1Data[menu1CurrentQ].answer;
+                speakText(answer);
+            }
+        }
+
+        function playQuestionAudio2() {
+            if (menu2CurrentQ < menu2Data.length) {
+                const answer = menu2Data[menu2CurrentQ].answer;
+                speakText(answer);
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ms-MY'; // Malay language
+                utterance.rate = 0.8; // Slightly slower for children
+                utterance.pitch = 1.1; // Slightly higher pitch for friendliness
+                utterance.volume = 0.8;
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                alert('Maaf, pelayar anda tidak menyokong fungsi audio.');
+            }
+        }
+
+        // localStorage functions
+       function saveGameRecord(playerName, schoolName, menuName, score, correct, total, timeInSeconds) {
+    const gameRecords = JSON.parse(localStorage.getItem('spellingGameRecords') || '[]');
+    
+    const record = {
+        playerName: playerName,
+        schoolName: schoolName,   // ✅ simpan nama sekolah juga
+        menuName: menuName,
+        score: score,
+        correct: correct,
+        total: total,
+        timeInSeconds: timeInSeconds,
+        date: new Date().toLocaleDateString('ms-MY'),
+        timestamp: Date.now()
+    };
+    
+            gameRecords.push(record);
+            localStorage.setItem('spellingGameRecords', JSON.stringify(gameRecords));
+        }
+
+        function getPlayerStats() {
+            const gameRecords = JSON.parse(localStorage.getItem('spellingGameRecords') || '[]');
+            
+            // Group by player and calculate stats
+            const playerStats = {};
+            
+            gameRecords.forEach(record => {
+                if (!playerStats[record.playerName]) {
+                    playerStats[record.playerName] = {
+                        playerName: record.playerName,
+                        menuMN: 0,
+                        menuKS: 0,
+                        totalScore: 0
+                    };
+                }
+                
+                if (record.menuName === 'Menu M & N') {
+                    playerStats[record.playerName].menuMN = Math.max(playerStats[record.playerName].menuMN, record.score);
+                } else if (record.menuName === 'Menu K & S') {
+                    playerStats[record.playerName].menuKS = Math.max(playerStats[record.playerName].menuKS, record.score);
+                }
+                
+                // Calculate total score (best from each menu)
+                playerStats[record.playerName].totalScore = playerStats[record.playerName].menuMN + playerStats[record.playerName].menuKS;
+            });
+            
+            // Convert to array and sort by total score
+            return Object.values(playerStats).sort((a, b) => b.totalScore - a.totalScore);
+        }
+
+        function getTopScores() {
+            const gameRecords = JSON.parse(localStorage.getItem('spellingGameRecords') || '[]');
+            
+            // Group by player and get their best score
+            const playerBestScores = {};
+            
+            gameRecords.forEach(record => {
+                if (!playerBestScores[record.playerName] || record.score > playerBestScores[record.playerName].score) {
+                    playerBestScores[record.playerName] = record;
+                }
+            });
+            
+            // Convert to array and sort by score
+            return Object.values(playerBestScores).sort((a, b) => b.score - a.score);
+        }
+
+      function getUniquePlayerNames() {
+            const gameRecords = JSON.parse(localStorage.getItem('spellingGameRecords') || '[]');
+            const uniqueNames = [...new Set(gameRecords.map(record => record.playerName))];
+            return uniqueNames.sort();
+        }
+
+        function getPlayerRecords(playerName) {
+            const gameRecords = JSON.parse(localStorage.getItem('spellingGameRecords') || '[]');
+            return gameRecords
+                .filter(record => record.playerName === playerName)
+                .sort((a, b) => b.timestamp - a.timestamp); // Most recent first
+        }
+
+
+        // Initialize page when loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            populatePlayerDropdown();
+        });
+
+        // Close leaderboard when clicking outside
+        document.addEventListener('click', function(event) {
+            const leaderboard = document.getElementById('leaderboardOverlay');
+            
+            if (event.target === leaderboard) {
+                closeLeaderboard();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9750b8ca8400d433',t:'MTc1NjE4Mzk2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
